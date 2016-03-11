@@ -196,10 +196,13 @@ public class LargeImageView extends View {
         if(isflg) {
             canvas.translate(1000, 1000); // 平移 画布
         }
+        Log.d("large", "当前层数：" + canvas.getSaveCount());
       //  int sc = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
         canvas.drawPath(path, mPaint);
+        Log.d("large", "当前层数：" + canvas.getSaveCount());
         // 还原画布
-       // canvas.restoreToCount(sc);
+        //canvas.restoreToCount(sc);
+        Log.d("large", "当前层数：" + canvas.getSaveCount());
     }
 
     @Override
