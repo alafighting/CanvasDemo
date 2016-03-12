@@ -1,4 +1,4 @@
-package com.tianshaokai.canvasdemo;
+package com.tianshaokai.canvasdemo.myview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,6 +10,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.tianshaokai.canvasdemo.R;
 
 /**
  * Created by tianshaokai on 2016/3/11.

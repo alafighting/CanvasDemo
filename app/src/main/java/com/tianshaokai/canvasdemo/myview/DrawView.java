@@ -1,4 +1,4 @@
-package com.tianshaokai.canvasdemo;
+package com.tianshaokai.canvasdemo.myview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,6 +12,8 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.tianshaokai.canvasdemo.R;
 
 /**
  * link(http://blog.csdn.net/rhljiayou/article/details/7212620)
