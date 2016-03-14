@@ -41,6 +41,10 @@ public class LargeImageView extends View {
      * 绘制的区域
      */
     private volatile Rect mRect = new Rect();
+    /**
+     * 记录原始区域
+     */
+    private volatile Rect mSourceRect = new Rect();
 
     private MoveGestureDetector mDetector;
 
@@ -221,9 +225,6 @@ public class LargeImageView extends View {
         bm = mDecoder.decodeRegion(mRect, options);
         canvas.drawBitmap(bm, 0, 0, null);
 
-        if(isflg) {
-            canvas.translate(1000, 1000); // 平移 画布
-        }
         Log.d("large", "当前层数：" + canvas.getSaveCount());
         //int sc = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
 
@@ -231,6 +232,8 @@ public class LargeImageView extends View {
         Canvas pathCanvas = new Canvas(bitmap);
         pathCanvas.drawPath(path, mPaint);
         pathCanvas.drawPath(pathEraser, mPaintEraser);
+        // 实现跟随移动
+        canvas.translate(mSourceRect.left-mRect.left, mSourceRect.top-mRect.top);
         canvas.drawBitmap(bitmap, 0, 0, null);
 
         Log.d("large", "当前层数：" + canvas.getSaveCount());
@@ -253,6 +256,9 @@ public class LargeImageView extends View {
         mRect.top = imageHeight / 2 - height / 2;
         mRect.right = mRect.left + width;
         mRect.bottom = mRect.top + height;
+
+        // 记录原始绘制区域
+        mSourceRect = new Rect(mRect);
     }
 
 
