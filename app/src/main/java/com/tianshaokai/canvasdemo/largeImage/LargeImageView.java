@@ -8,6 +8,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -61,7 +63,7 @@ public class LargeImageView extends View {
     public boolean eraser() {
         if(!eraser) {
             eraser = true;
-            mPaintEraser.setColor(Color.parseColor("#00000000"));
+            mPaintEraser.setColor(Color.parseColor("#00000000"));//#00000000
             mPaintEraser.setStrokeWidth(10);
         } else {
             eraser = false;
@@ -128,6 +130,7 @@ public class LargeImageView extends View {
 
         mPaintEraser = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaintEraser.setStyle(Paint.Style.STROKE);
+        mPaintEraser.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));   //设置画笔的痕迹是透明的，从而可以看到背景图片
         pathEraser = new Path();
     }
 
@@ -207,11 +210,13 @@ public class LargeImageView extends View {
     protected void onDraw(Canvas canvas) {
         bm = mDecoder.decodeRegion(mRect, options);
         canvas.drawBitmap(bm, 0, 0, null);
+
         if(isflg) {
             canvas.translate(1000, 1000); // 平移 画布
         }
         Log.d("large", "当前层数：" + canvas.getSaveCount());
-      //  int sc = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
+        //int sc = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
+
         canvas.drawPath(path, mPaint);
         canvas.drawPath(pathEraser, mPaintEraser);
         Log.d("large", "当前层数：" + canvas.getSaveCount());
