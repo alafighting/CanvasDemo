@@ -130,7 +130,7 @@ public class LargeImageView extends View {
 
         mPaintEraser = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaintEraser.setStyle(Paint.Style.STROKE);
-        mPaintEraser.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));   //设置画笔的痕迹是透明的，从而可以看到背景图片
+        mPaintEraser.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));   //设置画笔的痕迹是透明的，从而可以看到背景图片
         pathEraser = new Path();
     }
 
@@ -206,6 +206,16 @@ public class LargeImageView extends View {
         return true;
     }
 
+    private Bitmap bitmap;
+
+    @Override
+    public void layout(int l, int t, int r, int b) {
+        super.layout(l, t, r, b);
+        if (bitmap == null) {
+            bitmap = Bitmap.createBitmap(r - l, b - t, Bitmap.Config.ARGB_8888);
+        }
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         bm = mDecoder.decodeRegion(mRect, options);
@@ -217,8 +227,12 @@ public class LargeImageView extends View {
         Log.d("large", "当前层数：" + canvas.getSaveCount());
         //int sc = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
 
-        canvas.drawPath(path, mPaint);
-        canvas.drawPath(pathEraser, mPaintEraser);
+        // 先绘制到临时Bitmap，再绘制到View
+        Canvas pathCanvas = new Canvas(bitmap);
+        pathCanvas.drawPath(path, mPaint);
+        pathCanvas.drawPath(pathEraser, mPaintEraser);
+        canvas.drawBitmap(bitmap, 0, 0, null);
+
         Log.d("large", "当前层数：" + canvas.getSaveCount());
         // 还原画布
         //canvas.restoreToCount(sc);
