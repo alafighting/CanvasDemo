@@ -61,9 +61,7 @@ public class LargeImageView extends View {
     public boolean eraser() {
         if(!eraser) {
             eraser = true;
-          /*  mPaint.setColor(Color.parseColor("#000000"));
-            mPaint.setStrokeWidth(10);*/
-            mPaintEraser.setColor(Color.parseColor("#000000")); // #00000000
+            mPaintEraser.setColor(Color.parseColor("#00000000"));
             mPaintEraser.setStrokeWidth(10);
         } else {
             eraser = false;
@@ -182,21 +180,21 @@ public class LargeImageView extends View {
             float touchY = event.getY();
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                /*    if(eraser) {
+                    if(eraser) {
                         pathEraser.moveTo(touchX, touchY);
                         pathEraser.lineTo(touchX, touchY);
-                    }else {*/
+                    }else {
                         path.moveTo(touchX, touchY);
                         path.lineTo(touchX, touchY);
-                    //}
+                    }
                     break;
                 case MotionEvent.ACTION_MOVE:
                     Log.d("large", "ACTION_MOVE");
-                  /*  if(eraser) {
+                    if(eraser) {
                         pathEraser.lineTo(touchX, touchY);
-                    } else {*/
+                    } else {
                         path.lineTo(touchX, touchY);
-                    //}
+                    }
 
                     break;
             }
@@ -214,11 +212,8 @@ public class LargeImageView extends View {
         }
         Log.d("large", "当前层数：" + canvas.getSaveCount());
       //  int sc = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
-        if(eraser) {
-            canvas.drawPath(path, mPaintEraser);
-        } else {
-            canvas.drawPath(path, mPaint);
-        }
+        canvas.drawPath(path, mPaint);
+        canvas.drawPath(pathEraser, mPaintEraser);
         Log.d("large", "当前层数：" + canvas.getSaveCount());
         // 还原画布
         //canvas.restoreToCount(sc);
