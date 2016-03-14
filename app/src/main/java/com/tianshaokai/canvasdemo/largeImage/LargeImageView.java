@@ -23,9 +23,10 @@ import java.io.InputStream;
 public class LargeImageView extends View {
 
     private Paint mPaint;
-    Path path;
+    private Paint mPaintEraser;
+    Path path, pathEraser;
     boolean isflg = false;
-    boolean eraser = true;
+    boolean eraser = false;
 
     Bitmap bm;
 
@@ -58,12 +59,13 @@ public class LargeImageView extends View {
     }
 
     public boolean eraser() {
-        if(eraser) {
-            eraser = false;
-            mPaint.setColor(Color.parseColor("#00000000"));
-            mPaint.setStrokeWidth(15);
-        } else {
+        if(!eraser) {
             eraser = true;
+
+            mPaintEraser.setColor(Color.parseColor("#000000")); // #00000000
+            mPaintEraser.setStrokeWidth(10);
+        } else {
+            eraser = false;
             mPaint.setColor(Color.parseColor("#FF0000"));
             mPaint.setStrokeWidth(10);
         }
@@ -124,6 +126,10 @@ public class LargeImageView extends View {
         mPaint.setStrokeWidth(10);
 
         path = new Path();
+
+        mPaintEraser = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintEraser.setStyle(Paint.Style.STROKE);
+        pathEraser = new Path();
     }
 
 
@@ -175,12 +181,23 @@ public class LargeImageView extends View {
             float touchY = event.getY();
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    path.moveTo(touchX, touchY);
-                    path.lineTo(touchX, touchY);
+                    if(eraser) {
+                        pathEraser.moveTo(touchX, touchY);
+                        pathEraser.lineTo(touchX, touchY);
+
+                    }else {
+                        path.moveTo(touchX, touchY);
+                        path.lineTo(touchX, touchY);
+                    }
                     break;
                 case MotionEvent.ACTION_MOVE:
                     Log.d("large", "ACTION_MOVE");
-                    path.lineTo(touchX, touchY);
+                    if(eraser) {
+                        pathEraser.lineTo(touchX, touchY);
+                    } else {
+                        path.lineTo(touchX, touchY);
+                    }
+
                     break;
             }
             invalidate();
@@ -192,13 +209,21 @@ public class LargeImageView extends View {
     protected void onDraw(Canvas canvas) {
         bm = mDecoder.decodeRegion(mRect, options);
         canvas.drawBitmap(bm, 0, 0, null);
-
         if(isflg) {
             canvas.translate(1000, 1000); // 平移 画布
         }
         Log.d("large", "当前层数：" + canvas.getSaveCount());
       //  int sc = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
-        canvas.drawPath(path, mPaint);
+        //canvas.save();
+
+        if(eraser) {
+            canvas.save();
+            canvas.drawPath(pathEraser, mPaintEraser);
+            canvas.restore();
+        } else {
+            canvas.drawPath(path, mPaint);
+        }
+
         Log.d("large", "当前层数：" + canvas.getSaveCount());
         // 还原画布
         //canvas.restoreToCount(sc);

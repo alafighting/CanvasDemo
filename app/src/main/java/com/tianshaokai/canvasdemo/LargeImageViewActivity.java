@@ -47,9 +47,9 @@ public class LargeImageViewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 boolean eraserflag = mLargeImageView.eraser();
                 if( eraserflag) {
-                    eraser.setText("橡皮");
-                } else {
                     eraser.setText("笔");
+                } else {
+                    eraser.setText("橡皮");
 
                 }
             }
