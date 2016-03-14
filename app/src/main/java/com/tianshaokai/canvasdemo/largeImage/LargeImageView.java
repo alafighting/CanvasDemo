@@ -184,7 +184,6 @@ public class LargeImageView extends View {
                     if(eraser) {
                         pathEraser.moveTo(touchX, touchY);
                         pathEraser.lineTo(touchX, touchY);
-
                     }else {
                         path.moveTo(touchX, touchY);
                         path.lineTo(touchX, touchY);
@@ -214,16 +213,11 @@ public class LargeImageView extends View {
         }
         Log.d("large", "当前层数：" + canvas.getSaveCount());
       //  int sc = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
-        //canvas.save();
-
         if(eraser) {
-            canvas.save();
             canvas.drawPath(pathEraser, mPaintEraser);
-            canvas.restore();
         } else {
             canvas.drawPath(path, mPaint);
         }
-
         Log.d("large", "当前层数：" + canvas.getSaveCount());
         // 还原画布
         //canvas.restoreToCount(sc);
