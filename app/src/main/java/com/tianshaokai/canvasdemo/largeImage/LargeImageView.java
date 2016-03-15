@@ -37,6 +37,7 @@ public class LargeImageView extends FrameLayout {
 
     private Paint mPaint;
     private Paint mPaintEraser;
+    // 记录涂画顺序
     private List<PathItem> paths = new ArrayList<>();
 
     public static class PathItem {
@@ -96,12 +97,17 @@ public class LargeImageView extends FrameLayout {
                     tempBitmap = Bitmap.createBitmap(mImageWidth/2, mImageHeight/2, Bitmap.Config.ARGB_4444);
                 }
                 Canvas tempCanvas = new Canvas(tempBitmap);
+                // 清空画布
+                tempCanvas.drawPaint(mPaintEraser);
+                // 绘制涂画
                 tempCanvas.save();
                 tempCanvas.scale(0.5F, 0.5F);
                 for (PathItem item : paths) {
                     tempCanvas.drawPath(item.path, item.paint);
                 }
                 tempCanvas.restore();
+
+                // 绘制到View
                 canvas.drawBitmap(tempBitmap, new Rect(0, 0, mImageWidth/2, mImageHeight/2), new Rect(0, 0, mImageWidth, mImageHeight), null);
             }
         };
